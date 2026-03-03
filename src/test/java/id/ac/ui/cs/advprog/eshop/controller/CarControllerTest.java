@@ -32,7 +32,10 @@ class CarControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(carController).build();
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(carController)
+                .setViewResolvers((viewName, locale) -> (model, request, response) -> {})
+                .build();
     }
 
     @Test

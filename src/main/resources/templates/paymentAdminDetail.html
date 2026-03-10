@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Admin Detail</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h3>Payment Detail</h3>
+
+    <div th:if="${payment == null}" class="alert alert-warning">
+        Payment not found.
+    </div>
+
+    <div th:if="${payment != null}">
+        <table class="table table-bordered col-6">
+            <tr>
+                <th>Payment ID</th>
+                <td th:text="${payment.id}"></td>
+            </tr>
+            <tr>
+                <th>Method</th>
+                <td th:text="${payment.method}"></td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td th:text="${payment.status}"></td>
+            </tr>
+            <tr>
+                <th>Order ID</th>
+                <td th:text="${payment.orderId}"></td>
+            </tr>
+        </table>
+
+        <form th:action="@{/payment/admin/set-status/{id}(id=${payment.id})}" method="post">
+            <div class="form-group">
+                <label for="statusSelect">Set Status</label>
+                <select name="status" id="statusSelect" class="form-control mb-4 col-4">
+                    <option value="SUCCESS">SUCCESS</option>
+                    <option value="REJECTED">REJECTED</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Status</button>
+            <a href="/payment/admin/list" class="btn btn-secondary ml-2">Back</a>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -125,3 +125,39 @@ Karena CarController berada di dalam ProductController, setiap perubahan pada ro
 
 ### Duplikasi yang membingungkan
 Pada ProductService versi lama terdapat dua method dengan tujuan yang sama, yaitu delete(String id) dan deleteProductById(String productId). Method deleteProductById bahkan tidak memiliki implementasi dan tidak melakukan apa pun. Hal ini terjadi karena tidak adanya penerapan prinsip Interface Segregation (ISP), sehingga interface menjadi tidak jelas. Akibatnya, developer lain bisa salah memanggil method dan menyebabkan produk tidak terhapus tanpa adanya error, yang membuat bug sulit dilacak.
+
+---
+
+## Reflection 4
+### 1. TDD Flow Usefulness
+Setelah mengikuti alur Test-Driven Development (TDD) dalam tutorial ini, saya merefleksikan beberapa hal berdasarkan pertanyaan reflektif yang diusulkan oleh Percival (2017):
+### Apakah saya menulis test sebelum kode produksi?
+Ya, dalam tutorial ini saya mengikuti siklus RED-GREEN-REFACTOR. Setiap tahap dimulai dari menulis test yang gagal terlebih dahulu (RED), kemudian mengimplementasikan kode minimum agar test lulus (GREEN), dan terakhir melakukan refactor tanpa mengubah perilaku kode (REFACTOR).
+
+### Apakah TDD cukup berguna?
+Secara keseluruhan, alur TDD ini cukup berguna karena beberapa alasan:
+### - Kejelasan requirement
+Sebelum menulis kode, saya diminta memahami requirement secara mendalam. Misalnya, saya harus memahami bahwa status hanya boleh berisi 4 nilai valid dan products tidak boleh kosong sebelum mengimplementasikan Order model.
+### - Desain yang lebih baik
+Dengan menulis test terlebih dahulu, saya secara tidak langsung merancang API/interface dari kelas yang akan dibuat
+### - Keamanan saat refactor
+Ketika melakukan refactor, saya bisa memastikan bahwa perubahan tidak merusak fungsionalitas yang sudah ada karena test sudah tersedia.
+### - Deteksi bug lebih awal
+Beberapa edge case seperti status tidak valid atau produk kosong langsung terdeteksi sejak awal pengembangan.
+
+### Hal yang perlu diperbaiki ke depannya
+- Saya perlu melatih kebiasaan menulis test yang lebih ekspresif agar mudah dipahami.
+- Saya perlu lebih disiplin dalam tidak menulis kode produksi sebelum ada test yang gagal.
+- Cakupan test perlu diperluas, seperti menambahkan test untuk kasus-kasus boundary yang belum tercakup.
+
+### 2. Kesesuaian Tests dengan Prinsip F.I.R.S.T.
+### Fast (F)
+Test yang dibuat sudah cukup cepat karena tidak melibatkan I/O eksternal seperti database sungguhan atau network call. Penggunaan Mockito untuk meng-mock OrderRepository di OrderServiceImplTest memastikan test berjalan dalam memori saja sehingga eksekusinya sangat cepat.
+### Isolated/Independent (I)
+Setiap test berjalan secara independen. Penggunaan @BeforeEach memastikan setiap test dimulai dari state yang bersih dan tidak bergantung pada hasil test lain. Mock pada layer service juga memastikan test tidak bergantung pada implementasi repository yang sebenarnya.
+### Repeatable (R)
+est dapat dijalankan berulang kali dengan hasil yang konsisten karena tidak ada dependensi terhadap kondisi eksternal.
+### Self-Validating (S)
+Semua test menggunakan assertion yang jelas sehingga hasilnya langsung terlihat PASS atau FAIL tanpa perlu interpretasi manual.
+### Timely (T)
+Test ditulis sebelum kode produksi sesuai TDD sehingga prinsip timely terpenuhi dengan baik.

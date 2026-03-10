@@ -29,9 +29,9 @@ public class CarRepository {
     }
 
     public Car findById(String id) {
-        for (Car car : carData) {
-            if (car.getCarId().equals(id)) {
-                return car;
+        for (int i = 0; i < carData.size(); i++) {
+            if (carData.get(i).getCarId().equals(id)) {
+                return carData.get(i);
             }
         }
         return null;

@@ -23,9 +23,9 @@ public class PaymentRepository {
     }
 
     public Payment getPayment(String id) {
-        for (Payment payment : paymentData) {
-            if (payment.getId().equals(id)) {
-                return payment;
+        for (int i = 0; i < paymentData.size(); i++) {
+            if (paymentData.get(i).getId().equals(id)) {
+                return paymentData.get(i);
             }
         }
         return null;

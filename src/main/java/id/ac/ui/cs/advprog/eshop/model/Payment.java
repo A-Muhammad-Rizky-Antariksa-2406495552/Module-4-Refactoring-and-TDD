@@ -7,10 +7,11 @@ import java.util.Map;
 
 @Getter
 public class Payment {
-    private final String id;
-    private final String method;
+    private String id;
+    private String orderId;
+    private String method;
     private String status;
-    private final Map<String, String> paymentData;
+    private Map<String, String> paymentData;
 
     public Payment(String id, String method, Map<String, String> paymentData) {
         if (paymentData == null) {
@@ -24,6 +25,16 @@ public class Payment {
 
     public Payment(String id, String method, String status, Map<String, String> paymentData) {
         this(id, method, paymentData);
+        this.setStatus(status);
+    }
+
+    public Payment(String id, String method, Map<String, String> paymentData, String orderId) {
+        this(id, method, paymentData);
+        this.orderId = orderId;
+    }
+
+    public Payment(String id, String method, String status, Map<String, String> paymentData, String orderId) {
+        this(id, method, paymentData, orderId);
         this.setStatus(status);
     }
 

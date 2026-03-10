@@ -22,7 +22,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Payment addPayment(Order order, String method, Map<String, String> paymentData) {
         String status = determineStatus(method, paymentData);
-        Payment payment = new Payment(UUID.randomUUID().toString(), method, status, paymentData);
+        Payment payment = new Payment(UUID.randomUUID().toString(), method, status, paymentData, order.getId());
         return paymentRepository.save(payment);
     }
 
@@ -32,10 +32,12 @@ public class PaymentServiceImpl implements PaymentService {
             throw new IllegalArgumentException("Invalid payment status: " + status);
         }
         payment.setStatus(status);
-        if (PaymentStatus.SUCCESS.getValue().equals(status)) {
-            order.setStatus(OrderStatus.SUCCESS.getValue());
-        } else if (PaymentStatus.REJECTED.getValue().equals(status)) {
-            order.setStatus(OrderStatus.FAILED.getValue());
+        if (order != null) {
+            if (PaymentStatus.SUCCESS.getValue().equals(status)) {
+                order.setStatus(OrderStatus.SUCCESS.getValue());
+            } else if (PaymentStatus.REJECTED.getValue().equals(status)) {
+                order.setStatus(OrderStatus.FAILED.getValue());
+            }
         }
         return paymentRepository.save(payment);
     }

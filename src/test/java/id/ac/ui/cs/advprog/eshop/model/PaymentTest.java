@@ -1,5 +1,7 @@
 package id.ac.ui.cs.advprog.eshop.model;
 
+import id.ac.ui.cs.advprog.eshop.enums.PaymentMethod;
+import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,56 +26,59 @@ class PaymentTest {
 
     @Test
     void testCreatePaymentDefaultStatus() {
-        Payment payment = new Payment("pay-001", "VOUCHER_CODE", voucherData);
+        Payment payment = new Payment("pay-001", PaymentMethod.VOUCHER_CODE.getValue(), voucherData);
         assertEquals("pay-001", payment.getId());
-        assertEquals("VOUCHER_CODE", payment.getMethod());
-        assertEquals("WAITING_PAYMENT", payment.getStatus());
+        assertEquals(PaymentMethod.VOUCHER_CODE.getValue(), payment.getMethod());
+        assertEquals(PaymentStatus.WAITING_PAYMENT.getValue(), payment.getStatus());
         assertEquals(voucherData, payment.getPaymentData());
     }
 
     @Test
     void testCreatePaymentWithSuccessStatus() {
-        Payment payment = new Payment("pay-001", "VOUCHER_CODE", "SUCCESS", voucherData);
-        assertEquals("SUCCESS", payment.getStatus());
+        Payment payment = new Payment("pay-001", PaymentMethod.VOUCHER_CODE.getValue(),
+                PaymentStatus.SUCCESS.getValue(), voucherData);
+        assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
     }
 
     @Test
     void testCreatePaymentWithRejectedStatus() {
-        Payment payment = new Payment("pay-001", "VOUCHER_CODE", "REJECTED", voucherData);
-        assertEquals("REJECTED", payment.getStatus());
+        Payment payment = new Payment("pay-001", PaymentMethod.VOUCHER_CODE.getValue(),
+                PaymentStatus.REJECTED.getValue(), voucherData);
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
 
     @Test
     void testCreatePaymentWithInvalidStatus() {
         assertThrows(IllegalArgumentException.class, () ->
-                new Payment("pay-001", "VOUCHER_CODE", "INVALID_STATUS", voucherData)
+                new Payment("pay-001", PaymentMethod.VOUCHER_CODE.getValue(),
+                        "INVALID_STATUS", voucherData)
         );
     }
 
     @Test
     void testCreatePaymentNullPaymentData() {
         assertThrows(IllegalArgumentException.class, () ->
-                new Payment("pay-001", "VOUCHER_CODE", null)
+                new Payment("pay-001", PaymentMethod.VOUCHER_CODE.getValue(), null)
         );
     }
 
     @Test
     void testSetStatusToSuccess() {
-        Payment payment = new Payment("pay-001", "VOUCHER_CODE", voucherData);
-        payment.setStatus("SUCCESS");
-        assertEquals("SUCCESS", payment.getStatus());
+        Payment payment = new Payment("pay-001", PaymentMethod.VOUCHER_CODE.getValue(), voucherData);
+        payment.setStatus(PaymentStatus.SUCCESS.getValue());
+        assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
     }
 
     @Test
     void testSetStatusToRejected() {
-        Payment payment = new Payment("pay-001", "VOUCHER_CODE", voucherData);
-        payment.setStatus("REJECTED");
-        assertEquals("REJECTED", payment.getStatus());
+        Payment payment = new Payment("pay-001", PaymentMethod.VOUCHER_CODE.getValue(), voucherData);
+        payment.setStatus(PaymentStatus.REJECTED.getValue());
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
 
     @Test
     void testSetStatusWithInvalidValue() {
-        Payment payment = new Payment("pay-001", "VOUCHER_CODE", voucherData);
+        Payment payment = new Payment("pay-001", PaymentMethod.VOUCHER_CODE.getValue(), voucherData);
         assertThrows(IllegalArgumentException.class, () ->
                 payment.setStatus("INVALID_STATUS")
         );
@@ -81,9 +86,9 @@ class PaymentTest {
 
     @Test
     void testCreatePaymentWithBankTransferMethod() {
-        Payment payment = new Payment("pay-002", "BANK_TRANSFER", bankTransferData);
-        assertEquals("BANK_TRANSFER", payment.getMethod());
-        assertEquals("WAITING_PAYMENT", payment.getStatus());
+        Payment payment = new Payment("pay-002", PaymentMethod.BANK_TRANSFER.getValue(), bankTransferData);
+        assertEquals(PaymentMethod.BANK_TRANSFER.getValue(), payment.getMethod());
+        assertEquals(PaymentStatus.WAITING_PAYMENT.getValue(), payment.getStatus());
         assertEquals(bankTransferData, payment.getPaymentData());
     }
 }

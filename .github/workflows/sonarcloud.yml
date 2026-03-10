@@ -66,7 +66,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Generate a token on Sonarcloud.io, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
         with:
           args: >
-            -Dsonar.projectKey=A-Muhammad-Rizky-Antariksa-2406495552_Modul-1-Coding-Standards
+            -Dsonar.projectKey=A-Muhammad-Rizky-Antariksa-2406495552_Module-4-Refactoring-and-TDD
             -Dsonar.organization=a-muhammad-rizky-antariksa-2406495552
             -Dsonar.sources=src/main/java
             -Dsonar.tests=src/test/java

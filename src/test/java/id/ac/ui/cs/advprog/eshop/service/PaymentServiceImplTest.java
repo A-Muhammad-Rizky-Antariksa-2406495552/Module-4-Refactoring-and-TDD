@@ -89,14 +89,12 @@ class PaymentServiceImplTest {
 
     @Test
     void testAddPaymentVoucherCodeNotStartWithESHOP() {
-        Map<String, String> badVoucher = new HashMap<>();
-        badVoucher.put("voucherCode", "XXXXX1234ABC5678");
-
-        Payment mockPayment = new Payment("pay-001", PaymentMethod.VOUCHER_CODE.getValue(),
-                PaymentStatus.REJECTED.getValue(), badVoucher);
-        when(paymentRepository.save(any(Payment.class))).thenReturn(mockPayment);
-
-        Payment result = paymentService.addPayment(order, PaymentMethod.VOUCHER_CODE.getValue(), badVoucher);
+        Map<String, String> data = new HashMap<>();
+        data.put("voucherCode", "XXXXX1234ABC5678");
+        when(paymentRepository.save(any(Payment.class))).thenReturn(
+                new Payment("pay-001", "VOUCHER_CODE", "REJECTED", data, "order-001")
+        );
+        Payment result = paymentService.addPayment(order, "VOUCHER_CODE", data);
         assertEquals(PaymentStatus.REJECTED.getValue(), result.getStatus());
     }
 
@@ -205,5 +203,66 @@ class PaymentServiceImplTest {
 
         List<Payment> result = paymentService.getAllPayments();
         assertEquals(2, result.size());
+    }
+
+    @Test
+    void testSetStatusWaitingPaymentWithOrder() {
+        Payment payment = new Payment("pay-001", "VOUCHER_CODE", voucherData);
+        when(paymentRepository.save(any(Payment.class))).thenReturn(payment);
+        Payment result = paymentService.setStatus(payment, "WAITING_PAYMENT", order);
+        assertEquals("WAITING_PAYMENT", result.getStatus());
+        assertEquals(OrderStatus.WAITING_PAYMENT.getValue(), order.getStatus());
+    }
+
+    @Test
+    void testAddPaymentUnknownMethod() {
+        Map<String, String> data = new HashMap<>();
+        data.put("someKey", "someValue");
+        when(paymentRepository.save(any(Payment.class))).thenReturn(
+                new Payment("pay-001", "UNKNOWN_METHOD", "REJECTED", data, "order-001")
+        );
+        Payment result = paymentService.addPayment(order, "UNKNOWN_METHOD", data);
+        assertEquals(PaymentStatus.REJECTED.getValue(), result.getStatus());
+    }
+
+    @Test
+    void testSetStatusWaitingPaymentOrderNotNull() {
+        Payment payment = new Payment("pay-001", "VOUCHER_CODE", voucherData);
+        when(paymentRepository.save(any(Payment.class))).thenReturn(payment);
+
+        Payment result = paymentService.setStatus(payment, "WAITING_PAYMENT", order);
+        assertEquals("WAITING_PAYMENT", result.getStatus());
+        assertEquals("WAITING_PAYMENT", order.getStatus());
+    }
+
+    @Test
+    void testAddPaymentVoucherCodeWrongLength() {
+        Map<String, String> data = new HashMap<>();
+        data.put("voucherCode", "ESHOP123");
+        when(paymentRepository.save(any(Payment.class))).thenReturn(
+                new Payment("pay-001", "VOUCHER_CODE", "REJECTED", data, "order-001")
+        );
+        Payment result = paymentService.addPayment(order, "VOUCHER_CODE", data);
+        assertEquals(PaymentStatus.REJECTED.getValue(), result.getStatus());
+    }
+
+    @Test
+    void testSetStatusWithNullOrder() {
+        Payment payment = new Payment("pay-001", "VOUCHER_CODE", voucherData);
+        when(paymentRepository.save(any(Payment.class))).thenReturn(payment);
+
+        Payment result = paymentService.setStatus(payment, "SUCCESS", null);
+        assertEquals("SUCCESS", result.getStatus());
+    }
+
+    @Test
+    void testAddPaymentVoucherCodeNull() {
+        Map<String, String> data = new HashMap<>();
+        data.put("voucherCode", null);
+        when(paymentRepository.save(any(Payment.class))).thenReturn(
+                new Payment("pay-001", "VOUCHER_CODE", "REJECTED", data, "order-001")
+        );
+        Payment result = paymentService.addPayment(order, "VOUCHER_CODE", data);
+        assertEquals(PaymentStatus.REJECTED.getValue(), result.getStatus());
     }
 }

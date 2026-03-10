@@ -84,4 +84,22 @@ class PaymentRepositoryTest {
         List<Payment> all = paymentRepository.getAllPayments();
         assertTrue(all.isEmpty());
     }
+
+    @Test
+    void testGetPaymentReturnsCorrectPayment() {
+        Payment payment = new Payment("pay-001", "VOUCHER_CODE", voucherData);
+        paymentRepository.save(payment);
+        Payment found = paymentRepository.getPayment("pay-001");
+        assertNotNull(found);
+        assertEquals("pay-001", found.getId());
+    }
+
+    @Test
+    void testGetPaymentWrongId() {
+        Payment payment = new Payment("pay-001", "VOUCHER_CODE", voucherData);
+        paymentRepository.save(payment);
+
+        Payment found = paymentRepository.getPayment("pay-999");
+        assertNull(found);
+    }
 }

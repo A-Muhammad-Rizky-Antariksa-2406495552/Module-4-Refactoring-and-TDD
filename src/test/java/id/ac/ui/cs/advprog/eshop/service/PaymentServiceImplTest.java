@@ -92,6 +92,10 @@ class PaymentServiceImplTest {
         Map<String, String> badVoucher = new HashMap<>();
         badVoucher.put("voucherCode", "XXXXX1234ABC5678");
 
+        Payment mockPayment = new Payment("pay-001", PaymentMethod.VOUCHER_CODE.getValue(),
+                PaymentStatus.REJECTED.getValue(), badVoucher);
+        when(paymentRepository.save(any(Payment.class))).thenReturn(mockPayment);
+
         Payment result = paymentService.addPayment(order, PaymentMethod.VOUCHER_CODE.getValue(), badVoucher);
         assertEquals(PaymentStatus.REJECTED.getValue(), result.getStatus());
     }
@@ -100,6 +104,10 @@ class PaymentServiceImplTest {
     void testAddPaymentVoucherCodeInsufficientNumericChars() {
         Map<String, String> badVoucher = new HashMap<>();
         badVoucher.put("voucherCode", "ESHOP123ABCDEFGH");
+
+        Payment mockPayment = new Payment("pay-001", PaymentMethod.VOUCHER_CODE.getValue(),
+                PaymentStatus.REJECTED.getValue(), badVoucher);
+        when(paymentRepository.save(any(Payment.class))).thenReturn(mockPayment);
 
         Payment result = paymentService.addPayment(order, PaymentMethod.VOUCHER_CODE.getValue(), badVoucher);
         assertEquals(PaymentStatus.REJECTED.getValue(), result.getStatus());
@@ -119,6 +127,10 @@ class PaymentServiceImplTest {
 
     @Test
     void testAddPaymentBankTransferEmptyBankName() {
+        Payment mockPayment = new Payment("pay-001", PaymentMethod.BANK_TRANSFER.getValue(),
+                PaymentStatus.REJECTED.getValue(), invalidBankTransferData);
+        when(paymentRepository.save(any(Payment.class))).thenReturn(mockPayment);
+
         Payment result = paymentService.addPayment(order, PaymentMethod.BANK_TRANSFER.getValue(), invalidBankTransferData);
         assertEquals(PaymentStatus.REJECTED.getValue(), result.getStatus());
     }
@@ -128,6 +140,10 @@ class PaymentServiceImplTest {
         Map<String, String> data = new HashMap<>();
         data.put("bankName", "BCA");
         data.put("referenceCode", null);
+
+        Payment mockPayment = new Payment("pay-001", PaymentMethod.BANK_TRANSFER.getValue(),
+                PaymentStatus.REJECTED.getValue(), data);
+        when(paymentRepository.save(any(Payment.class))).thenReturn(mockPayment);
 
         Payment result = paymentService.addPayment(order, PaymentMethod.BANK_TRANSFER.getValue(), data);
         assertEquals(PaymentStatus.REJECTED.getValue(), result.getStatus());
